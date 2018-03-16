@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ajax Post</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'post/css/style.css' %}">
+	<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+	<div id="pagewrap">
+		<h1>My Posts</h1>
+		<div id="posts">
+		</div>
+
+		<form action="add_note" method="POST" id="note_form">
+			{% csrf_token %}
+			<label for="note">Add a note:</label>
+			<textarea name="note"></textarea>
+			<input type="submit" value="Post It!" id="post_button">
+		</form>
+
+		<script>
+			
+			$('#note_form').submit(function(e){
+				e.preventDefault();
+
+				console.log('Sending ajax reques to ', $(this).attr('action'));
+				console.log('Submitting the following data ', $(this).serialize());
+				$.ajax({
+					url: $(this).attr('action'),
+					method: 'post',
+					data: $(this).serialize(),
+					success: function(serverResponse) {
+						$('#posts').append(serverResponse);
+						$('#note_form')[0].reset()
+
+					}
+				})
+			});
+		</script>
+
+</body>
+</html>
